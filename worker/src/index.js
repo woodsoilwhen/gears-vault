@@ -10,6 +10,11 @@
 
 export default {
 	async fetch(request, env, ctx) {
+		const { pathname } = request.url
+		if (pathname === '/api/v1/login') {
+			const { login } = await import('./login/login.js');
+			return login(request, env, ctx);
+		}
 		return new Response("Hello World!");
 	},
 };
