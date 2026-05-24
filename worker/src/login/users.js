@@ -1,11 +1,13 @@
+import bcrypt from 'bcryptjs';
+
 export async function users(request, env, ctx) {
     switch (request.method) {
         case 'POST':
             const body = await request.json();
             switch (body.action) {
                 case '登录':
-                   var { username, password } = body;
-                   var User_Info = await env.login_auth_db.prepare(
+                    var { username, password } = body;
+                    var User_Info = await env.login_auth_db.prepare(
                         "SELECT username, password FROM login_auth WHERE username = ?"
                     ).bind(username).first();
                     if (!User_Info) {
@@ -14,7 +16,8 @@ export async function users(request, env, ctx) {
                             message: "登录失败，用户名不存在！"
                         }), { status: 404 });
                     }
-                    if (User_Info.password !== password) {
+                    const passwordMatch = await bcrypt.compare(password, User_Info.password);
+                    if (!passwordMatch) {
                         return new Response(JSON.stringify({
                             message: "登录失败，密码错误！"
                         }), { status: 401 });
@@ -38,18 +41,17 @@ export async function users(request, env, ctx) {
                         "SELECT username FROM login_auth WHERE username = ?"
                     ).bind(username).first();
 
-                    console.log(existingUser);
-
                     if (existingUser) {
                         return new Response(JSON.stringify({
                             message: "创建失败，用户名已存在！"
                         }), { status: 409 });
                     }
-
+                    const hashedPassword = await bcrypt.hash(password, 10);
+                    console.log(hashedPassword);
                     // 用户名不存在，写入数据库
                     await env.login_auth_db.prepare(
                         "INSERT INTO login_auth (username, password) VALUES (?, ?)"
-                    ).bind(username, password).run();
+                    ).bind(username, hashedPassword).run();
 
                     return new Response(JSON.stringify({
                         message: "创建用户成功！"
@@ -57,7 +59,6 @@ export async function users(request, env, ctx) {
 
             }
         default:
-            console.log(body);
             return new Response("登录失败！", { status: 405 });
     }
 }
