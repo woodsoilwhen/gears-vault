@@ -21,16 +21,19 @@
                 <h4 class="text-center mb-4">创建用户</h4>
 
                 <div class="mb-3">
+                    <label class="form-label">用户名</label>
                     <input type="text" class="form-control" v-model="username" placeholder="请输入用户名"
                         @keyup.enter="handleLogin">
                 </div>
 
                 <div class="mb-4">
+                    <label class="form-label">密码</label>
                     <input type="password" class="form-control" v-model="password" placeholder="请输入密码"
                         @keyup.enter="handleLogin">
                 </div>
 
                 <div class="mb-4">
+                    <label class="form-label">确认密码</label>
                     <input type="password" class="form-control" v-model="confirmPassword" placeholder="请再次输入密码"
                         @keyup.enter="handleLogin">
                 </div>
