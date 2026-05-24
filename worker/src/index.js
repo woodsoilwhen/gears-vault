@@ -7,14 +7,20 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-
+import loginPage from './../../page/login.html';
 export default {
+	
 	async fetch(request, env, ctx) {
-		const { pathname } = request.url
-		if (pathname === '/api/v1/login') {
-			const { login } = await import('./login/login.js');
-			return login(request, env, ctx);
+		const parseUrl = new URL(request.url)
+		switch (parseUrl.pathname) {
+			case '/api/v1/login':
+				const { login } = await import('./login/login.js');
+				return await login(request, env, ctx);
+			default:
+				
+				return new Response(loginPage, {
+				headers: { 'Content-Type': 'text/html; charset=utf-8' },
+			});
 		}
-		return new Response("Hello World!");
 	},
 };
