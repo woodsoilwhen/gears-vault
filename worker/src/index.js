@@ -13,10 +13,12 @@ export default {
 		const parseUrl = new URL(request.url)
 		switch (parseUrl.pathname) {
 			case '/api/v1/users':
-				const { createUsers } = await import('./login/users.js');
-				return await createUsers(request, env, ctx);
+				console.log('switch case api pathname = '+parseUrl.pathname);
+				const { users } = await import('./login/users.js');
+				return await users(request, env, ctx);
 
 			default:
+				console.log('switch default; pathname = '+parseUrl.pathname);
 				const page = await fetch("http://127.0.0.1:5500/page"+parseUrl.pathname);
 				return new Response(page.body);
 		}
