@@ -13,6 +13,14 @@
 	"upload_source_maps": true,
 	"compatibility_flags": [
 		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "login_auth_db",
+			"database_name": "login_auth_db",
+			"database_id": "c66b6c2b-31ec-4306-b0d7-13623e6109c5",
+			"remote": false
+		}
 	]
 	/**
 	 * Smart Placement
